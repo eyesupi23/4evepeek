@@ -1,0 +1,128 @@
+@import "tailwindcss";
+
+/* Sweetie 16 palette — a classic 8-bit set */
+@theme {
+  --color-night: #1a1c2c;
+  --color-plum: #5d275d;
+  --color-berry: #b13e53;
+  --color-ember: #ef7d57;
+  --color-gold: #ffcd75;
+  --color-lime: #a7f070;
+  --color-leaf: #38b764;
+  --color-teal: #257179;
+  --color-navy: #29366f;
+  --color-cobalt: #3b5dc9;
+  --color-sky: #41a6f6;
+  --color-ice: #73eff7;
+  --color-snow: #f4f4f4;
+  --color-mist: #94b0c2;
+  --color-slate: #566c86;
+  --color-ink: #333c57;
+
+  --font-pixel: "Press Start 2P", "Chakra Petch", ui-monospace, monospace;
+  --font-thai: "Chakra Petch", "Press Start 2P", system-ui, sans-serif;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+  body {
+    @apply bg-night text-snow font-thai antialiased;
+    padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px)
+      env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+    -webkit-tap-highlight-color: transparent;
+    background-image: radial-gradient(var(--color-navy) 1px, transparent 1px);
+    background-size: 8px 8px;
+  }
+  /* faint CRT scanlines */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      to bottom,
+      rgb(0 0 0 / 0.12) 0 1px,
+      transparent 1px 3px
+    );
+    z-index: 50;
+  }
+  img {
+    image-rendering: pixelated;
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-gold);
+    outline-offset: 4px;
+  }
+}
+
+@layer components {
+  /* Notched pixel frame: border drawn with hard shadows, corners cut */
+  .px-frame {
+    --px: 4px;
+    --edge: var(--color-snow);
+    box-shadow:
+      0 calc(var(--px) * -1) 0 0 var(--edge),
+      0 var(--px) 0 0 var(--edge),
+      calc(var(--px) * -1) 0 0 0 var(--edge),
+      var(--px) 0 0 0 var(--edge);
+  }
+
+  .px-btn {
+    @apply relative select-none bg-ink text-snow transition-none;
+    box-shadow:
+      0 -4px 0 0 var(--color-snow),
+      0 4px 0 0 var(--color-snow),
+      -4px 0 0 0 var(--color-snow),
+      4px 0 0 0 var(--color-snow),
+      inset 0 -6px 0 0 rgb(0 0 0 / 0.35),
+      inset 0 4px 0 0 rgb(255 255 255 / 0.15);
+  }
+  .px-btn:not(:disabled):active {
+    transform: translateY(3px);
+    box-shadow:
+      0 -4px 0 0 var(--color-snow),
+      0 4px 0 0 var(--color-snow),
+      -4px 0 0 0 var(--color-snow),
+      4px 0 0 0 var(--color-snow),
+      inset 0 4px 0 0 rgb(0 0 0 / 0.35);
+  }
+
+  /* Covered tile: checker + question mark */
+  .tile-cover {
+    background-color: var(--color-cobalt);
+    background-image:
+      linear-gradient(45deg, var(--color-navy) 25%, transparent 25%, transparent 75%, var(--color-navy) 75%),
+      linear-gradient(45deg, var(--color-navy) 25%, transparent 25%, transparent 75%, var(--color-navy) 75%);
+    background-size: 16px 16px;
+    background-position: 0 0, 8px 8px;
+    transition: opacity 0.32s steps(4);
+  }
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+@keyframes pop {
+  0% { transform: scale(0.6); }
+  60% { transform: scale(1.12); }
+  100% { transform: scale(1); }
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+.animate-blink { animation: blink 1s steps(1) infinite; }
+.animate-pop { animation: pop 0.3s steps(3); }
+.animate-shake { animation: shake 0.25s steps(2) 2; }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-blink, .animate-pop, .animate-shake { animation: none; }
+  .tile-cover { transition: none; }
+}
