@@ -24,7 +24,7 @@ export const SHUFFLE_QUESTIONS = true;
  */
 export const SCORE_MULTIPLIERS = [
   { from: 16, to: 20, multiplier: 2 },
-  { from: 21, to: 27, multiplier: 3 },
+  { from: 21, to: 30, multiplier: 3 },
 ];
 
 /**
